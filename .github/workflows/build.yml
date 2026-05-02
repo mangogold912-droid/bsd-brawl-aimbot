@@ -83,9 +83,14 @@ jobs:
           "https://github.com/JesusFreke/smali/releases/download/v2.5.2/baksmali-2.5.2.jar" || \
         curl -L --fail --retry 3 --user-agent "Mozilla/5.0" \
           -o baksmali.jar \
-          "https://github.com/baksmali/smali/releases/download/v2.5.2/baksmali-2.5.2.jar"
+          "https://github.com/google/smali/releases/download/v2.5.2/baksmali-2.5.2.jar" || \
+        curl -L --fail --retry 3 --user-agent "Mozilla/5.0" \
+          -o baksmali.jar \
+          "https://github.com/baksmali/smali/releases/download/v2.5.2/baksmali-2.5.2.jar" || \
+        wget -L -O baksmali.jar "https://bitbucket.org/JesusFreke/smali/downloads/baksmali-2.5.2.jar"
+        echo "=== baksmali.jar info ==="
         ls -la baksmali.jar
-        jar tf baksmali.jar | grep -i manifest || echo "No manifest"
+        jar tf baksmali.jar | grep -i manifest || echo "No manifest in jar"
         java -jar baksmali.jar --version
         DEX_FILE=$(find . -name "classes.dex" -type f | head -1)
         echo "Found dex: $DEX_FILE"
