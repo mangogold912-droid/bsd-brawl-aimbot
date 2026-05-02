@@ -19,6 +19,12 @@ jobs:
     - name: Setup Android NDK
       uses: android-actions/setup-android@v3
       
+    - name: Setup JDK 17
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openjdk-17-jdk
+        echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+      
     - name: Install NDK
       run: |
         sdkmanager --install "ndk;25.2.9519653"
