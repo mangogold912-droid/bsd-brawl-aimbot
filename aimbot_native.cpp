@@ -27,11 +27,11 @@
 #define POSITION_OFFSET_Y 0x14
 #define POSITION_OFFSET_Z 0x18
 
-// ===== STATE =====
-static int aimbot_enabled = AIMBOT_ENABLED_DEFAULT;
-static int dodgebot_enabled = DODGEBOT_ENABLED_DEFAULT;
-static int is_firing = 0;
-static int is_super = 0;  // Is using super (ultimate)?
+// ===== STATE ===== (shared across files, non-static)
+int aimbot_enabled = AIMBOT_ENABLED_DEFAULT;
+int dodgebot_enabled = DODGEBOT_ENABLED_DEFAULT;
+int is_firing = 0;
+int is_super = 0;  // Is using super (ultimate)?
 
 // Enemy tracking
 static float enemy_x = 0.0f, enemy_y = 0.0f;
