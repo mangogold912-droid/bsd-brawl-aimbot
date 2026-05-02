@@ -73,8 +73,8 @@ jobs:
 
     - name: Convert dex to smali
       run: |
-        sudo apt-get install -y smali
-        baksmali d classes.dex -o smali_classes2/
+        wget -q https://bitbucket.org/JesusFreke/smali/downloads/baksmali-2.5.2.jar -O baksmali.jar
+        java -jar baksmali.jar d classes.dex -o smali_classes2/
 
     - name: Add smali to APK
       run: |
