@@ -36,8 +36,8 @@ jobs:
     - name: Setup APK build tools
       run: |
         sudo apt-get update && sudo apt-get install -y default-jre
-        wget -q https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.9.1.jar -O apktool.jar
-        wget -q https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -O apktool
+        wget https://github.com/iBotPeaches/Apktool/releases/download/v2.9.1/apktool_2.9.1.jar -O apktool.jar || wget https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.9.1.jar -O apktool.jar
+        wget https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -O apktool
         chmod +x apktool
 
     - name: Decompile APK
