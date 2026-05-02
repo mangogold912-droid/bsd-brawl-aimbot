@@ -78,10 +78,17 @@ jobs:
 
     - name: Convert dex to smali
       run: |
-        wget -q "https://repo1.maven.org/maven2/org/smali/baksmali/2.5.2/baksmali-2.5.2.jar" -O baksmali.jar
+        curl -L --fail --retry 3 --user-agent "Mozilla/5.0" \
+          -o baksmali.jar \
+          "https://github.com/JesusFreke/smali/releases/download/v2.5.2/baksmali-2.5.2.jar" || \
+        curl -L --fail --retry 3 --user-agent "Mozilla/5.0" \
+          -o baksmali.jar \
+          "https://github.com/baksmali/smali/releases/download/v2.5.2/baksmali-2.5.2.jar"
+        ls -la baksmali.jar
+        jar tf baksmali.jar | grep -i manifest || echo "No manifest"
+        java -jar baksmali.jar --version
         DEX_FILE=$(find . -name "classes.dex" -type f | head -1)
         echo "Found dex: $DEX_FILE"
-        ls -la "$DEX_FILE"
         java -jar baksmali.jar d "$DEX_FILE" -o smali_classes2/
         echo "=== Smali files ==="
         find smali_classes2 -type f | head -10
