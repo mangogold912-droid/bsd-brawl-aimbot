@@ -64,22 +64,34 @@ jobs:
         echo "Using android.jar: $ANDROID_JAR"
         mkdir -p java_classes
         javac -cp "$ANDROID_JAR" -d java_classes java/com/bsd/brawl/mod/AimbotPanel.java
+        echo "=== Compiled classes ==="
+        find java_classes -name "*.class"
 
     - name: Convert Java to dex
       run: |
         D8=$(find $ANDROID_SDK_ROOT -name "d8" | head -1)
         echo "Using d8: $D8"
         $D8 --output . java_classes/com/bsd/brawl/mod/*.class
+        echo "=== Dex files ==="
+        ls -la *.dex || echo "No .dex in current dir"
+        find . -name "*.dex" -type f
 
     - name: Convert dex to smali
       run: |
         wget -q "https://repo1.maven.org/maven2/org/smali/baksmali/2.5.2/baksmali-2.5.2.jar" -O baksmali.jar
-        java -jar baksmali.jar d classes.dex -o smali_classes2/
+        DEX_FILE=$(find . -name "classes.dex" -type f | head -1)
+        echo "Found dex: $DEX_FILE"
+        ls -la "$DEX_FILE"
+        java -jar baksmali.jar d "$DEX_FILE" -o smali_classes2/
+        echo "=== Smali files ==="
+        find smali_classes2 -type f | head -10
 
     - name: Add smali to APK
       run: |
         mkdir -p apk_decompiled/smali_classes2
         cp -r smali_classes2/* apk_decompiled/smali_classes2/
+        echo "=== APK smali_classes2 ==="
+        find apk_decompiled/smali_classes2 -type f | head -10
 
     - name: Patch AndroidManifest.xml
       run: |
