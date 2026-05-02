@@ -1,0 +1,148 @@
+================================================================================
+libg.so - Position Write Function Discovery
+================================================================================
+
+=== Step 1: Getting function list ===
+Functions output length: 0
+
+
+Total functions found: 0
+Top 20 largest functions:
+
+=== Step 2: Searching for position write patterns ===
+
+=== Step 3: Direct string address search in code ===
+
+  References to 0x17f3ce:
+    Searching 4 bytes in [0x1284000-0x12877dc]
+    [2K
+    Searching 4 bytes in [0x1254000-0x1282234]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ][2K
+    Searching 4 bytes in [0x122f718-0x1252cf8]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+
+  References to 0x196e42:
+    Searching 4 bytes in [0x1284000-0x12877dc]
+    [2K
+    Searching 4 bytes in [0x1254000-0x1282234]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ][2K
+    Searching 4 bytes in [0x122f718-0x1252cf8]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+
+  References to 0x19a117:
+    Searching 4 bytes in [0x1284000-0x12877dc]
+    [2K
+    Searching 4 bytes in [0x1254000-0x1282234]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ][2K
+    Searching 4 bytes in [0x122f718-0x1252cf8]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+
+  References to 0x1a4c02:
+    Searching 4 bytes in [0x1284000-0x12877dc]
+    [2K
+    Searching 4 bytes in [0x1254000-0x1282234]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ][2K
+    Searching 4 bytes in [0x122f718-0x1252cf8]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+
+  References to 0x1e6938:
+    Searching 4 bytes in [0x1284000-0x12877dc]
+    [2K
+    Searching 4 bytes in [0x1254000-0x1282234]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ][2K
+    Searching 4 bytes in [0x122f718-0x1252cf8]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+
+  References to 0x1b295e:
+    Searching 4 bytes in [0x1284000-0x12877dc]
+    [2K
+    Searching 4 bytes in [0x1254000-0x1282234]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+    [# ][2K
+    Searching 4 bytes in [0x122f718-0x1252cf8]
+    [# ]
+    [# ]
+    [# ]
+    [# ]
+
+=== Done ===

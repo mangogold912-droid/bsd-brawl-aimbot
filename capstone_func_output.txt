@@ -1,0 +1,138 @@
+================================================================================
+libg.so - Detailed Analysis @ 0x508000 - 0x50c000
+================================================================================
+
+--- Function 0x508000 ~ 0x5090ac ---
+  0x50812c: fmov s0, w8
+  0x508148: fmov s2, w8
+  0x50814c: fmul s0, s0, s2
+  0x508150: fmul s0, s0, s1
+  0x508160: fsub s0, s0, s8
+  0x508164: str s0, [x19, #0x5f0]
+  0x50816c: fmov s0, s8
+  0x508498: str s0, [x19, #0xa2c]
+  0x5084cc: str s0, [x19, #0xa2c]
+  0x508524: fmov s2, #1.00000000
+  0x508534: fmov s1, w8
+  0x508540: fmov s3, w8
+  0x508544: fmul s1, s0, s1
+  0x508554: fmul s2, s2, s3
+  0x508560: fmov s2, w9
+  0x50858c: fmov s9, s0
+  0x508598: fmov s10, s0
+  0x5085a0: fmov s2, s0
+  0x5085a4: fmov s0, s9
+  0x5085ac: fmov s1, s10
+  0x5085d0: fmov s9, s0
+  0x5085d8: fmov s1, s0
+  0x5085e4: fmov s0, s9
+  0x508840: fadd s0, s8, s8
+  0x508848: fsub s0, s1, s0
+  0x508850: str s0, [x19, #0x684]
+  0x508860: fmov s1, w8
+  0x508864: fmul s0, s0, s1
+  0x508870: fmov s8, #1.00000000
+  0x50887c: fmov s1, w8
+  0x508888: fmul s0, s1, s0
+  0x5088a0: fmov s1, w8
+  0x5088a4: fmul s0, s0, s1
+  0x5088ac: fmov s1, #6.00000000
+  0x5088c8: fmov s1, w8
+  0x5088cc: fmov s2, w9
+  0x5088d0: str s0, [x20, #0x20]
+  0x5088e0: fadd s8, s0, s8
+  0x5088ec: fmov s0, w8
+  0x5088f0: fmul s0, s8, s0
+  0x508908: fmov s0, w8
+  0x50890c: fmul s0, s8, s0
+  0x50892c: str s0, [x8, #0x20]
+  0x508dc0: fmov s1, w8
+  0x508dc4: fmul s0, s0, s1
+  0x508de0: fmov s1, w9
+  0x508de4: fmul s0, s0, s1
+  0x508dec: fdiv s0, s0, s1
+
+--- Function 0x5090b0 ~ 0x509204 ---
+  0x5090cc: fmov s8, s0
+  0x509150: fmov s1, w9
+  0x509158: fmov s0, w8
+  0x50917c: fmul s8, s9, s8
+  0x5091a0: str s0, [x19, #0x6a0]
+  0x5091c4: fmov s1, s8
+  0x5091d8: str s0, [x19, #0x6a4]
+  0x5091e0: fmov s1, s8
+  0x5091f0: str s0, [x19, #0x6ac]
+
+--- Function 0x509208 ~ 0x509254 ---
+  0x509210: fmov s1, s8
+  0x509220: str s0, [x19, #0x6a0]
+  0x50923c: str s1, [x19, #0x6a4]
+  0x509240: str s0, [x19, #0x6ac]
+
+--- Function 0x509258 ~ 0x50931c ---
+  0x509258: str d8, [sp, #-0x30]!
+  0x5092ac: fdiv s8, s1, s0
+  0x5092c4: fmul s0, s8, s0
+  0x5092f0: fmul s0, s8, s0
+
+--- Function 0x509320 ~ 0x509408 ---
+  0x509320: str d8, [sp, #-0x40]!
+  0x5093c0: fdiv s8, s1, s0
+  0x5093c8: fmul s0, s8, s0
+  0x5093e4: fmul s0, s8, s0
+
+--- Function 0x50940c ~ 0x5094d8 ---
+  0x50940c: str d8, [sp, #-0x40]!
+  0x509490: fdiv s8, s1, s0
+  0x509498: fmul s0, s8, s0
+  0x5094b4: fmul s0, s8, s0
+
+--- Function 0x5095c4 ~ 0x5099dc ---
+  0x5095ec: fsub s0, s1, s0
+  0x5095f4: str s0, [x0, #0x680]
+  0x509994: fmov s0, #1.00000000
+  0x50999c: fmov s2, #1.00000000
+
+--- Function 0x5099e0 ~ 0x509dfc ---
+  0x509aa8: str d0, [x19, #0x9d0]
+  0x509ad4: fmov s0, #2.50000000
+  0x509ad8: fmov s1, #5.00000000
+  0x509b04: fmov s1, #6.00000000
+  0x509b0c: fmov s0, w8
+  0x509b54: str d0, [x19, #0x9d0]
+  0x509c94: fmov s0, #2.50000000
+  0x509c98: fmov s1, #5.00000000
+  0x509d20: fmov s2, #0.50000000
+  0x509d30: fmov s0, w8
+
+--- Function 0x509e00 ~ 0x50a1f8 ---
+  0x509ea0: fdiv s0, s0, s1
+  0x509fc8: fdiv s0, s0, s1
+  0x50a1d0: fmov w9, s2
+
+--- Function 0x50a1fc ~ 0x50a460 ---
+  0x50a204: fmov w10, s1
+  0x50a230: fmov w10, s0
+
+--- Function 0x50a464 ~ 0x50a490 ---
+  0x50a478: fmov s1, w8
+  0x50a488: fmul s0, s0, s1
+  0x50a48c: str s0, [x0, #0xb04]
+
+--- Function 0x50b6f0 ~ 0x50b760 ---
+  0x50b708: fmov s1, #1.00000000
+  0x50b72c: fmul s0, s0, s1
+
+--- Function 0x50b764 ~ 0x50c000 ---
+  0x50b770: str d10, [sp, #0x50]
+  0x50b798: fmov s8, s0
+  0x50b9b0: str d0, [x19, #0x858]
+  0x50ba98: fadd s10, s0, s8
+  0x50ba9c: str s10, [x19, #0x6b0]
+  0x50baa8: fadd s0, s8, s8
+  0x50bab8: fadd s0, s10, s0
+  0x50bac0: str s10, [x19, #0x6b0]
+  0x50badc: fmov s1, w8
+  0x50bae0: fmul s0, s0, s1
+
+=== Done ===

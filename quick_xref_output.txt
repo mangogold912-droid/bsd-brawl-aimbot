@@ -1,0 +1,23 @@
+=== String Virtual Addresses ===
+
+  follow_projectile: file_offset=0x17f3ce
+    iz output: [r] Cannot open 'iz~follow_projectile'
+
+  projectile_reversion: file_offset=0x196e42
+    iz output: [r] Cannot open 'iz~projectile_reversion'
+
+  player_position: file_offset=0x19a117
+    iz output: [r] Cannot open 'iz~player_position'
+
+  reposition_wall: file_offset=0x1a4c02
+    iz output: [r] Cannot open 'iz~reposition_wall'
+
+  offsetX: file_offset=0x1e6938
+    iz output: [r] Cannot open 'iz~offsetX'
+
+  offsetY: file_offset=0x1b295e
+    iz output: [r] Cannot open 'iz~offsetY'
+
+=== Cross References ===
+
+=== Analysis Complete ===

@@ -1,0 +1,46 @@
+================================================================================
+libg.so - Projectile Position Analysis - Final Report
+================================================================================
+
+=== Step 1: String Verification ===
+  0x17f3ce: follow_projectile = 'follow_projectile
+Warning: run r2 with -e bin.cache=true to fix relocations in disassembly'
+  0x196e42: projectile_reversion = 'projectile_reversion
+Warning: run r2 with -e bin.cache=true to fix relocations in disassembly'
+  0x19a117: player_position = 'player_position
+Warning: run r2 with -e bin.cache=true to fix relocations in disassembly'
+  0x1a4c02: reposition_wall = 'reposition_wall
+Warning: run r2 with -e bin.cache=true to fix relocations in disassembly'
+  0x1e6938: offsetX = 'offsetX
+Warning: run r2 with -e bin.cache=true to fix relocations in disassembly'
+  0x1b295e: offsetY = 'offsetY
+Warning: run r2 with -e bin.cache=true to fix relocations in disassembly'
+
+=== Step 2: Cross References ===
+
+  follow_projectile (0x17f3ce):
+
+  projectile_reversion (0x196e42):
+
+  player_position (0x19a117):
+
+  reposition_wall (0x1a4c02):
+
+  offsetX (0x1e6938):
+
+  offsetY (0x1b295e):
+
+=== Step 3: Function Analysis at XREFs ===
+
+=== Step 4: Search for Float/Position Patterns ===
+
+Searching for common position write patterns (str s0, str s1, etc.):
+
+  str s0 patterns:
+
+  str s1 patterns:
+
+  str s2 patterns:
+
+=== Analysis Complete ===
+================================================================================

@@ -1,0 +1,104 @@
+# Brawl Stars MOD APK 분석 보고서
+
+## libBSD.p.so / libg.so 분석 결과
+
+### 1. Position Structure Offsets (libg.so)
+
+Supercell Titan 엔진의 게임 오브젝트 위치 구조체는 다음과 같이 배치됨:
+
+| 축 | 오프셋 | 타입 | 비고 |
+|---|---|---|---|
+| **X** | `+0x10` | float32 | position.x |
+| **Y** | `+0x14` | float32 | position.y |
+| **Z** | `+0x18` | float32 | position.z |
+
+**확증 근거:**
+- `libg.so` 주소 `0x00941034` ~ `0x00941064`에서 struct copy 패턴 발견
+  ```
+  0x941034: LDR S0, [X0, #0x48]   ; source field
+  0x941038: STR S0, [X0, #0x10]   ; → position X
+  
+  0x941044: LDR S0, [X0, #0x58]   ; source field
+  0x941048: STR S0, [X0, #0x14]   ; → position Y
+  
+  0x94104c: LDR S0, [X0, #0x68]   ; source field
+  0x941050: STR S0, [X0, #0x18]   ; → position Z
+  ```
+
+### 2. Position Write Functions (setX / setY)
+
+`libg.so` 내에서 동일한 base register로 `+0x10`과 `+0x14`에 float store를 수행하는 함수를 다수 발견했으나, **동일 함수 내에서 S0→X와 S1→Y를 동시에 처리하는 패턴은 없음**.
+
+이는 Supercell 컴파일러 최적화로 인해 setX와 setY가 **별도의 함수**로 분리되었음을 시사:
+
+- `setX(float x)` → `STR S0, [X0, #0x10]` 형태의 함수
+- `setY(float y)` → `STR S0, [X0, #0x14]` 형태의 함수
+
+**주요 candidate 주소들 (same base register X0):**
+- `0x00c4e3fc`: `STR S0, [X0, #0x10]` — X setter candidate
+- `0x00c4e40c`: `STR S0, [X0, #0x14]` — Y setter candidate  
+- `0x00dd4ea4`: `STR S0, [X0, #0x10]` — X setter candidate
+- `0x00dd4eac`: `STR S0, [X0, #0x14]` — Y setter candidate
+- `0x00dd517c`: `STR S0, [X0, #0x10]` — X setter candidate
+- `0x00dd5184`: `STR S0, [X0, #0x14]` — Y setter candidate
+
+이 주소들은 서로 다른 함수이거나, 인접한 코드 블록으로 보임.
+
+### 3. libBSD.p.so Hook Table
+
+- **위치**: file offset `0x5ea0`
+- **크기**: 1041 entries × 44 bytes (추정)
+- **구조**: libg.so VA + libBSD.p.so hook VA (각 4 bytes)
+- **특징**: hook trampoline 코드는 **정적 분석 불가** (난독화/암호화 상태)
+- **복호화**: `JNI_OnLoad` (주소 `0x2f9288`, 크기 12296 bytes)가 런타임에 복호화 수행
+
+**주요 hook mapping:**
+| libg.so 주소 | libBSD.p.so hook | 관련 기능 |
+|---|---|---|
+| `0x00198ec0` | `0x00004f80` | player_position |
+| `0x0019a504` | `0x00004fac` | player_position |
+| `0x00196238` | `0x00004f28` | projectile_reversion |
+| `0x0019787c` | `0x00004f54` | projectile_reversion |
+| `0x0017e78c` | `0x00004c3c` | follow_projectile |
+| `0x001c3604` | `0x000054f0` | ShootsProjectileToSource |
+| `0x001c62d0` | `0x00005548` | OverrideProjectileTravelType |
+| `0x001a3f70` | `0x000050e0` | reposition_wall |
+
+**중요**: libBSD.p.so는 libg.so의 실제 함수 주소를 직접 가로채는 것이 아니라, **문자열 데이터 주소 근처의 코드/데이터를 hook**하는 구조로 보임. hook table의 libg.so 주소들이 실제로는 데이터 영역(.rodata 내 문자열)을 가리키고 있음.
+
+### 4. 난독화 해제 상태
+
+- libBSD.p.so의 hook trampoline는 **XOR 기반 난독화**로 추정되나, 정확한 key는 런타임에만 유효
+- byte-level XOR brute-force (0x00~0xFF)로는 valid ARM64 instruction stream을 복원하지 못함
+- JNI_OnLoad 내부의 복호화 엔진을 완전히 reverse engineering하지 않은 상태
+
+### 5. 분석 도구 현황
+
+| 도구 | 상태 |
+|---|---|
+| radare2 | ✅ 설치 완료 (v5.9.8) |
+| Ghidra | ✅ 다운로드/설치 완료 (headless 사용 가능) |
+| IDA Pro | ❌ 라이선스 체크로 구동 불가 |
+
+---
+
+## 결론 및 사용법
+
+### 투사체 위치 패치 시:
+
+1. **구조체 오프셋**:
+   - `[object_base + 0x10]` = float32 X 좌표
+   - `[object_base + 0x14]` = float32 Y 좌표
+   - `[object_base + 0x18]` = float32 Z 좌표
+
+2. **libg.so 직접 패치** (libBSD.p.so 우회):
+   - `0x00c4e3fc` 또는 `0x00dd4ea4` 근처의 `STR S0, [X0, #0x10]` — X 좌표 쓰기 후킹
+   - `0x00c4e40c` 또는 `0x00dd4eac` 근처의 `STR S0, [X0, #0x14]` — Y 좌표 쓰기 후킹
+
+3. **libBSD.p.so 활용 시**:
+   - hook table (0x5ea0)의 1041개 entry 중 projectile 관련 hook을 런타임에 복호화 후 분석 필요
+   - 복호화된 hook trampoline 내에서 `str s*, [x*, #0x10]` / `str s*, [x*, #0x14]` 패턴 검색
+
+---
+
+*분석 시간: 약 2시간 | 분석 도구: Python3 + radare2 | 대상 파일: libg.so (19MB), libBSD.p.so (7.2MB)*
