@@ -58,6 +58,35 @@ jobs:
         mkdir -p apk_decompiled/lib/arm64-v8a
         cp libs/arm64-v8a/libbsd_aimbot.so apk_decompiled/lib/arm64-v8a/
 
+    - name: Compile Java floating service
+      run: |
+        ANDROID_JAR=$(find $ANDROID_SDK_ROOT -name "android.jar" | head -1)
+        echo "Using android.jar: $ANDROID_JAR"
+        mkdir -p java_classes
+        javac -cp "$ANDROID_JAR" -d java_classes java/com/bsd/brawl/mod/*.java
+
+    - name: Convert Java to dex
+      run: |
+        D8=$(find $ANDROID_SDK_ROOT -name "d8" | head -1)
+        echo "Using d8: $D8"
+        $D8 --output . java_classes/com/bsd/brawl/mod/*.class
+
+    - name: Convert dex to smali
+      run: |
+        sudo apt-get install -y smali
+        baksmali d classes.dex -o smali_classes2/
+
+    - name: Add smali to APK
+      run: |
+        mkdir -p apk_decompiled/smali_classes2
+        cp -r smali_classes2/* apk_decompiled/smali_classes2/
+
+    - name: Patch AndroidManifest.xml
+      run: |
+        python3 patch_manifest.py apk_decompiled/AndroidManifest.xml
+        echo "=== Patched manifest (last 40 lines) ==="
+        tail -40 apk_decompiled/AndroidManifest.xml
+
     - name: Recompile APK
       run: |
         java -jar apktool.jar b apk_decompiled -o bsd_brawl_plus_mod.apk
