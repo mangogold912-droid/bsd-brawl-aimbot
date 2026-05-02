@@ -14,25 +14,34 @@ def find_main_activity(manifest_path):
     with open(manifest_path, 'r') as f:
         content = f.read()
     
-    # Find all activity blocks with MAIN/LAUNCHER
-    # Pattern: <activity ... android:name="..." ...>...<intent-filter>...MAIN...LAUNCHER...</intent-filter>...</activity>
-    activity_pattern = re.compile(
-        r'<activity\s+([^>]*?)>.*?<intent-filter>.*?android\.intent\.action\.MAIN.*?</intent-filter>.*?</activity>',
+    # First try activity-alias with targetActivity (common for Supercell games)
+    alias_pattern = re.compile(
+        r'<activity-alias\s+([^>]*?)>.*?<intent-filter>.*?android\.intent\.action\.MAIN.*?</intent-filter>.*?</activity-alias>',
         re.DOTALL
     )
-    
-    match = activity_pattern.search(content)
+    match = alias_pattern.search(content)
     if match:
         attrs = match.group(1)
-        name_match = re.search(r'android:name="([^"]+)"', attrs)
-        if name_match:
-            return name_match.group(1)
-        # Try without namespace
+        target_match = re.search(r'targetActivity="([^"]+)"', attrs)
+        if target_match:
+            return target_match.group(1)
         name_match = re.search(r'name="([^"]+)"', attrs)
         if name_match:
             return name_match.group(1)
     
-    # Fallback: simple grep-like search
+    # Try activity with MAIN/LAUNCHER
+    activity_pattern = re.compile(
+        r'<activity\s+([^>]*?)>.*?<intent-filter>.*?android\.intent\.action\.MAIN.*?</intent-filter>.*?</activity>',
+        re.DOTALL
+    )
+    match = activity_pattern.search(content)
+    if match:
+        attrs = match.group(1)
+        name_match = re.search(r'name="([^"]+)"', attrs)
+        if name_match:
+            return name_match.group(1)
+    
+    # Fallback: line-by-line search
     lines = content.split('\n')
     current_activity = None
     for i, line in enumerate(lines):
@@ -40,7 +49,6 @@ def find_main_activity(manifest_path):
         if act_match:
             current_activity = act_match.group(1)
         if 'android.intent.action.MAIN' in line and current_activity:
-            # Check if LAUNCHER is in next few lines
             for j in range(i, min(i+10, len(lines))):
                 if 'android.intent.category.LAUNCHER' in lines[j]:
                     return current_activity
