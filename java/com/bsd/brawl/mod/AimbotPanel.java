@@ -52,6 +52,9 @@ public class AimbotPanel extends FrameLayout {
             PixelFormat.TRANSLUCENT
         );
         
+        // CRITICAL: Set window token from Activity's decor view
+        params.token = activity.getWindow().getDecorView().getWindowToken();
+        
         params.gravity = Gravity.TOP | Gravity.START;
         params.x = 50;
         params.y = 100;
@@ -126,7 +129,16 @@ public class AimbotPanel extends FrameLayout {
     
     public void show() {
         if (getParent() == null) {
-            wm.addView(this, params);
+            try {
+                android.util.Log.d("AimbotPanel", "Adding view to WindowManager, token=" + params.token);
+                wm.addView(this, params);
+                android.util.Log.d("AimbotPanel", "View added successfully");
+            } catch (Exception e) {
+                android.util.Log.e("AimbotPanel", "Failed to add view: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            android.util.Log.d("AimbotPanel", "View already has parent");
         }
     }
     
@@ -143,11 +155,19 @@ public class AimbotPanel extends FrameLayout {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (instance != null) {
-                    instance.hide();
+                try {
+                    android.util.Log.d("AimbotPanel", "createInActivity called");
+                    if (instance != null) {
+                        android.util.Log.d("AimbotPanel", "Hiding old instance");
+                        instance.hide();
+                    }
+                    instance = new AimbotPanel(activity);
+                    android.util.Log.d("AimbotPanel", "Showing new instance");
+                    instance.show();
+                } catch (Exception e) {
+                    android.util.Log.e("AimbotPanel", "createInActivity failed: " + e.getMessage());
+                    e.printStackTrace();
                 }
-                instance = new AimbotPanel(activity);
-                instance.show();
             }
         });
     }
