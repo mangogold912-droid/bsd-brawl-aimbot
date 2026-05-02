@@ -109,14 +109,16 @@ void predict_with_pattern(enemy_data_t* enemy, float time, float* out_x, float* 
             break;
             
         case 1: // Zigzag - add oscillation
-            *out_x = enemy->x + enemy->vx * time;
-            *out_y = enemy->y + enemy->vy * time;
-            // Add perpendicular oscillation
-            float perp_x = -enemy->vy;
-            float perp_y = enemy->vx;
-            float oscillation = sinf(time * 3.0f) * 1.5f; // Amplitude
-            *out_x += perp_x * oscillation;
-            *out_y += perp_y * oscillation;
+            {
+                *out_x = enemy->x + enemy->vx * time;
+                *out_y = enemy->y + enemy->vy * time;
+                // Add perpendicular oscillation
+                float perp_x = -enemy->vy;
+                float perp_y = enemy->vx;
+                float oscillation = sinf(time * 3.0f) * 1.5f; // Amplitude
+                *out_x += perp_x * oscillation;
+                *out_y += perp_y * oscillation;
+            }
             break;
             
         case 2: // Circular - predict circular path
