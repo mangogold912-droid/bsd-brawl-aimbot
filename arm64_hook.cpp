@@ -5,6 +5,7 @@
 #include <sys/mman.h>
 #include <string.h>
 #include <stdint.h>
+#include <jni.h>
 #include <android/log.h>
 
 #define LOG_TAG "BSD_HOOK"
