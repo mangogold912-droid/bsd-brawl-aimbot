@@ -29,6 +29,41 @@ jobs:
         export PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
         export TARGET=aarch64-linux-android21
         $ANDROID_NDK/ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk
+
+    - name: Download original APK
+      run: wget -q -O bsd_brawl_plus.apk https://cloud.mysticte.ch/project_bsd/bsd_brawl_plus_v67.264.apk
+
+    - name: Setup APK build tools
+      run: |
+        sudo apt-get update && sudo apt-get install -y default-jre
+        wget -q https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.9.1.jar -O apktool.jar
+        wget -q https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -O apktool
+        chmod +x apktool
+
+    - name: Decompile APK
+      run: java -jar apktool.jar d bsd_brawl_plus.apk -o apk_decompiled
+
+    - name: Inject .so library
+      run: |
+        mkdir -p apk_decompiled/lib/arm64-v8a
+        cp libs/arm64-v8a/libbsd_aimbot.so apk_decompiled/lib/arm64-v8a/
+        mkdir -p apk_decompiled/lib/armeabi-v7a
+        cp libs/armeabi-v7a/libbsd_aimbot.so apk_decompiled/lib/armeabi-v7a/
+
+    - name: Recompile APK
+      run: java -jar apktool.jar b apk_decompiled -o bsd_brawl_plus_mod.apk
+
+    - name: Sign APK
+      run: |
+        keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+        zipalign -v 4 bsd_brawl_plus_mod.apk bsd_brawl_plus_mod_aligned.apk
+        $ANDROID_SDK_ROOT/build-tools/33.0.0/apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out bsd_brawl_plus_signed.apk bsd_brawl_plus_mod_aligned.apk
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bsd-brawl-mod-apk
+        path: bsd_brawl_plus_signed.apk
         
     - name: Upload artifact
       uses: actions/upload-artifact@v4
