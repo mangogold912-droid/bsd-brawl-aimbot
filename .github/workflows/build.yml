@@ -105,6 +105,13 @@ jobs:
         echo "=== APK smali_classes2 ==="
         find apk_decompiled/smali_classes2 -type f | head -10
 
+    - name: Patch MainActivity smali
+      run: |
+        echo "=== Finding smali directories ==="
+        SMALI_DIRS=$(find apk_decompiled -maxdepth 1 -type d -name "smali*" | tr '\n' ',')
+        echo "Smali dirs: $SMALI_DIRS"
+        python3 patch_main_activity.py apk_decompiled "$SMALI_DIRS"
+
     - name: Patch AndroidManifest.xml
       run: |
         python3 patch_manifest.py apk_decompiled/AndroidManifest.xml
