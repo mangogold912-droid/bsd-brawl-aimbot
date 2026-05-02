@@ -54,9 +54,8 @@ jobs:
     - name: Sign APK
       run: |
         keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
-        zipalign -v 4 bsd_brawl_plus_mod.apk bsd_brawl_plus_mod_aligned.apk || cp bsd_brawl_plus_mod.apk bsd_brawl_plus_mod_aligned.apk
-        $ANDROID_SDK_ROOT/build-tools/33.0.0/apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out bsd_brawl_plus_signed.apk bsd_brawl_plus_mod_aligned.apk || \
-        $ANDROID_SDK_ROOT/build-tools/34.0.0/apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out bsd_brawl_plus_signed.apk bsd_brawl_plus_mod_aligned.apk
+        find $ANDROID_SDK_ROOT -name zipalign -exec {} -v 4 bsd_brawl_plus_mod.apk bsd_brawl_plus_mod_aligned.apk \; || cp bsd_brawl_plus_mod.apk bsd_brawl_plus_mod_aligned.apk
+        find $ANDROID_SDK_ROOT -name apksigner -exec {} sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out bsd_brawl_plus_signed.apk bsd_brawl_plus_mod_aligned.apk \;
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
