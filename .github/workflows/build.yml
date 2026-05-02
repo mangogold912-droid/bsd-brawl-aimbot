@@ -1,0 +1,45 @@
+name: Build BSD Brawl Aimbot
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Android NDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Install NDK
+      run: |
+        sdkmanager --install "ndk;25.2.9519653"
+        echo "ANDROID_NDK=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
+        
+    - name: Build native library
+      run: |
+        export PATH=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
+        export TARGET=aarch64-linux-android21
+        $ANDROID_NDK/ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk NDK_APPLICATION_MK=Application.mk
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bsd-aimbot-lib
+        path: libs/**/libbsd_aimbot.so
+        
+    - name: Create Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.run_number }}
+        name: BSD Brawl Aimbot v${{ github.run_number }}
+        files: libs/**/libbsd_aimbot.so
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
