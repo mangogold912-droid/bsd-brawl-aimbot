@@ -9,16 +9,12 @@ def patch_manifest(manifest_path):
     ns = 'http://schemas.android.com/apk/res/android'
     ET.register_namespace('android', ns)
     
-    # Add permissions
-    existing_perms = [p.get(f'{{{ns}}}name') for p in root.findall('uses-permission')]
-    
-    if 'android.permission.SYSTEM_ALERT_WINDOW' not in existing_perms:
-        perm1 = ET.SubElement(root, 'uses-permission')
-        perm1.set(f'{{{ns}}}name', 'android.permission.SYSTEM_ALERT_WINDOW')
-    
-    if 'android.permission.FOREGROUND_SERVICE' not in existing_perms:
-        perm2 = ET.SubElement(root, 'uses-permission')
-        perm2.set(f'{{{ns}}}name', 'android.permission.FOREGROUND_SERVICE')
+    # Remove unnecessary permissions that were added before
+    for perm in root.findall('uses-permission'):
+        name = perm.get(f'{{{ns}}}name')
+        if name in ['android.permission.SYSTEM_ALERT_WINDOW', 'android.permission.FOREGROUND_SERVICE']:
+            root.remove(perm)
+            print(f"Removed permission: {name}")
     
     # Find application element
     app = root.find('application')
@@ -26,27 +22,30 @@ def patch_manifest(manifest_path):
         print("ERROR: No <application> found in manifest")
         sys.exit(1)
     
-    # Add MainActivity
-    existing_activities = [a.get(f'{{{ns}}}name') for a in app.findall('activity')]
-    if 'com.bsd.brawl.mod.MainActivity' not in existing_activities:
-        activity = ET.SubElement(app, 'activity')
-        activity.set(f'{{{ns}}}name', 'com.bsd.brawl.mod.MainActivity')
-        activity.set(f'{{{ns}}}exported', 'true')
-        
-        intent_filter = ET.SubElement(activity, 'intent-filter')
-        action = ET.SubElement(intent_filter, 'action')
-        action.set(f'{{{ns}}}name', 'android.intent.action.MAIN')
-        category = ET.SubElement(intent_filter, 'category')
-        category.set(f'{{{ns}}}name', 'android.intent.category.LAUNCHER')
+    # Remove previously added MainActivity and AimbotFloatingService
+    for activity in app.findall('activity'):
+        name = activity.get(f'{{{ns}}}name')
+        if name == 'com.bsd.brawl.mod.MainActivity':
+            app.remove(activity)
+            print(f"Removed activity: {name}")
     
-    # Add AimbotFloatingService
-    existing_services = [s.get(f'{{{ns}}}name') for s in app.findall('service')]
-    if 'com.bsd.brawl.mod.AimbotFloatingService' not in existing_services:
-        service = ET.SubElement(app, 'service')
-        service.set(f'{{{ns}}}name', 'com.bsd.brawl.mod.AimbotFloatingService')
-        service.set(f'{{{ns}}}enabled', 'true')
-        service.set(f'{{{ns}}}exported', 'false')
-        service.set(f'{{{ns}}}foregroundServiceType', 'specialUse')
+    for service in app.findall('service'):
+        name = service.get(f'{{{ns}}}name')
+        if name == 'com.bsd.brawl.mod.AimbotFloatingService':
+            app.remove(service)
+            print(f"Removed service: {name}")
+    
+    # Find main activity for logging
+    main_activity = None
+    for activity in app.findall('activity'):
+        intent_filter = activity.find('intent-filter')
+        if intent_filter is not None:
+            for action in intent_filter.findall('action'):
+                if action.get(f'{{{ns}}}name') == 'android.intent.action.MAIN':
+                    main_activity = activity.get(f'{{{ns}}}name')
+                    break
+    
+    print(f"Main activity: {main_activity}")
     
     # Write back
     tree.write(manifest_path, encoding='utf-8', xml_declaration=True)

@@ -63,7 +63,7 @@ jobs:
         ANDROID_JAR=$(find $ANDROID_SDK_ROOT -name "android.jar" | head -1)
         echo "Using android.jar: $ANDROID_JAR"
         mkdir -p java_classes
-        javac -cp "$ANDROID_JAR" -d java_classes java/com/bsd/brawl/mod/*.java
+        javac -cp "$ANDROID_JAR" -d java_classes java/com/bsd/brawl/mod/AimbotPanel.java
 
     - name: Convert Java to dex
       run: |
