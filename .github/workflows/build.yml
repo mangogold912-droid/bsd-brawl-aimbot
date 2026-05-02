@@ -35,13 +35,3 @@ jobs:
       with:
         name: bsd-aimbot-lib
         path: libs/**/libbsd_aimbot.so
-        
-    - name: Create Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ github.run_number }}
-        name: BSD Brawl Aimbot v${{ github.run_number }}
-        files: libs/**/libbsd_aimbot.so
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
